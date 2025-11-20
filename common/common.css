@@ -1,0 +1,6 @@
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Pretendard',sans-serif;background:#fafafa;color:#222;}
+.header{width:100%;padding:16px;border-bottom:1px solid #ddd;background:#fff;}
+.logo{text-decoration:none;color:#333;font-size:20px;font-weight:600;}
+.container{max-width:900px;margin:0 auto;padding:20px;}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 4px rgba(0,0,0,0.08);}
