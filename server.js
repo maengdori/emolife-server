@@ -8,13 +8,17 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS 설정 (GitHub Pages + Railway)
+// ------------------------
+// CORS 설정
+// ------------------------
 app.use(cors({
-    origin: 'https://maengdori.github.io', // 프론트 도메인
+    origin: 'https://maengdori.github.io', // 프론트 주소
     credentials: true
 }));
 
+// ------------------------
 // 세션 설정
+// ------------------------
 app.use(session({
     secret: "emolife_secret",
     resave: false,
@@ -25,7 +29,7 @@ app.use(session({
 const PORT = process.env.PORT || 3000;
 
 // ------------------------
-// 기본 게시글 API
+// 게시글 API
 // ------------------------
 app.get('/posts', (req, res) => {
     let posts = [];
@@ -59,11 +63,13 @@ app.post('/admin/login', (req, res) => {
     }
 });
 
+// 관리자 인증 미들웨어
 function adminOnly(req, res, next) {
     if (req.session.isAdmin) next();
     else res.status(403).json({ message: '관리자 권한 없음' });
 }
 
+// 게시글 삭제 (관리자 전용)
 app.delete('/posts/:id', adminOnly, (req, res) => {
     const postId = req.params.id;
     let posts = [];
