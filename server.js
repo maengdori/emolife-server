@@ -1,55 +1,99 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const fs = require('fs');
+const session = require('express-session');
+require('dotenv').config();
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+secret: "emolife_secret",
+resave: false,
+saveUninitialized: true
+}));
+
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
+// ------------------------
+// 기본 게시글 API
+// ------------------------
 
-// 메모리 DB (MVP용)
+// 전체 게시글 불러오기
+app.get('/posts', (req, res) => {
 let posts = [];
-let postId = 1;
-
-app.get('/api/posts', (req, res) => {
-  const board = req.query.board || 'career';
-  const filtered = posts.filter(p => p.board === board);
-  res.json(filtered);
+try {
+posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
+} catch (err) {
+posts = [];
+}
+res.json(posts);
 });
 
-app.post('/api/posts', (req, res) => {
-  const { board, text, anonymous, tags } = req.body;
-  if (!text) return res.status(400).json({ error: 'Text required' });
-  const newPost = {
-    id: postId++,
-    board: board || 'career',
-    text: text.trim(),
-    likes: 0,
-    comments: [],
-    anonymous: !!anonymous,
-    tags: tags || []
-  };
-  posts.unshift(newPost);
-  res.status(201).json(newPost);
+// 게시글 추가 (프론트 write.js와 연동)
+app.post('/posts', (req, res) => {
+const { text } = req.body;
+let posts = [];
+try {
+posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
+} catch (err) {
+posts = [];
+}
+
+```
+const newPost = {
+    id: Date.now().toString(),
+    text
+};
+posts.push(newPost);
+fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
+res.json({ success: true, post: newPost });
+```
+
 });
 
-app.post('/api/posts/:id/like', (req, res) => {
-  const id = Number(req.params.id);
-  const post = posts.find(p => p.id === id);
-  if (!post) return res.status(404).json({ error: 'Post not found' });
-  post.likes += 1;
-  res.json({ likes: post.likes });
+// ------------------------
+// 관리자 기능
+// ------------------------
+
+// 관리자 로그인
+app.post('/admin/login', (req, res) => {
+const { password } = req.body;
+if (password === process.env.ADMIN_PASSWORD) {
+req.session.isAdmin = true;
+res.json({ success: true });
+} else {
+res.json({ success: false });
+}
 });
 
-app.post('/api/posts/:id/comment', (req, res) => {
-  const id = Number(req.params.id);
-  const { text } = req.body;
-  const post = posts.find(p => p.id === id);
-  if (!post) return res.status(404).json({ error: 'Post not found' });
-  if (!text) return res.status(400).json({ error: 'Text required' });
-  post.comments.push({ id: Date.now(), text: text.trim() });
-  res.json(post);
+// 관리자 인증 미들웨어
+function adminOnly(req, res, next) {
+if (req.session.isAdmin) next();
+else res.status(403).json({ message: '관리자 권한 없음' });
+}
+
+// 게시글 삭제 (관리자용)
+app.delete('/posts/:id', adminOnly, (req, res) => {
+const postId = req.params.id;
+let posts = [];
+try {
+posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
+} catch (err) {
+posts = [];
+}
+
+```
+posts = posts.filter(p => p.id !== postId);
+fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
+res.json({ success: true });
+```
+
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// ------------------------
+// 서버 시작
+// ------------------------
+app.listen(PORT, () => {
+console.log(`Server running on port ${PORT}`);
+});
