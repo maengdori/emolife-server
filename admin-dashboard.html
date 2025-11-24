@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Admin Dashboard</title>
+<title>관리자 대시보드</title>
 </head>
 <body>
 <h2>관리자 대시보드</h2>
@@ -22,7 +22,7 @@ const SERVER_URL = 'https://emolife-server-production.up.railway.app';
 async function loadPosts() {
     const board = document.getElementById('boardName').value || '';
     try {
-        const url = board ? `${SERVER_URL}/api/posts?board=${board}` : `${SERVER_URL}/api/posts`;
+        const url = board ? `${SERVER_URL}/posts?board=${board}` : `${SERVER_URL}/posts`;
         const res = await fetch(url, { credentials: 'include' });
         if (!res.ok) throw new Error('게시물을 불러오지 못했습니다');
         const posts = await res.json();
@@ -48,7 +48,7 @@ async function addPost() {
     if (!text) return alert('내용을 입력하세요');
 
     try {
-        const res = await fetch(`${SERVER_URL}/api/posts`, {
+        const res = await fetch(`${SERVER_URL}/posts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -65,7 +65,7 @@ async function addPost() {
 // 게시글 삭제
 async function deletePost(id) {
     try {
-        const res = await fetch(`${SERVER_URL}/api/posts/${id}`, {
+        const res = await fetch(`${SERVER_URL}/posts/${id}`, {
             method: 'DELETE',
             credentials: 'include'
         });
@@ -81,4 +81,3 @@ loadPosts();
 </script>
 </body>
 </html>
-
