@@ -9,29 +9,43 @@
 <div id="posts"></div>
 
 <script>
+const SERVER_URL = 'https://emolife-server-production.up.railway.app';
+
+// 게시글 불러오기
 async function loadPosts() {
-    const res = await fetch('https://emolife-server-production.up.railway.app/posts', { credentials: 'include' });
-    const posts = await res.json();
-    let html = "";
-    posts.forEach(p => {
-        html += `<div style="border:1px solid #ccc; margin:10px; padding:10px;">
-            <p><b>ID:</b> ${p.id}</p>
-            <p>${p.text}</p>
-            <button onclick="deletePost('${p.id}')">삭제</button>
-        </div>`;
-    });
-    document.getElementById('posts').innerHTML = html;
+    try {
+        const res = await fetch(`${SERVER_URL}/posts`, { credentials: 'include' });
+        if (!res.ok) throw new Error('게시물을 불러오지 못했습니다');
+        const posts = await res.json();
+        let html = "";
+        posts.forEach(p => {
+            html += `<div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                <p><b>ID:</b> ${p.id}</p>
+                <p>${p.text}</p>
+                <button onclick="deletePost('${p.id}')">삭제</button>
+            </div>`;
+        });
+        document.getElementById('posts').innerHTML = html;
+    } catch (err) {
+        document.getElementById('posts').innerHTML = `<p style="color:red;">${err.message}</p>`;
+    }
 }
 
+// 게시글 삭제
 async function deletePost(id) {
-    const res = await fetch(`https://emolife-server-production.up.railway.app/posts/${id}`, {
-        method: "DELETE",
-        credentials: 'include'
-    });
-    const data = await res.json();
-    if (data.success) loadPosts();
+    try {
+        const res = await fetch(`${SERVER_URL}/posts/${id}`, {
+            method: "DELETE",
+            credentials: 'include'
+        });
+        if (!res.ok) throw new Error('삭제 실패');
+        loadPosts();
+    } catch (err) {
+        alert(err.message);
+    }
 }
 
+// 페이지 로드 시 게시글 표시
 loadPosts();
 </script>
 </body>
