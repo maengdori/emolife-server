@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS 설정: GitHub Pages에서 요청 가능
+// CORS 설정: GitHub Pages 허용
 app.use(cors({
     origin: 'https://maengdori.github.io',
     credentials: true
@@ -22,8 +22,8 @@ app.use(session({
 
 const PORT = process.env.PORT || 3000;
 
-// GET 게시글 (board 쿼리 필터링)
-app.get('/api/posts', (req, res) => {
+// GET 게시글 (board 필터링)
+app.get('/posts', (req, res) => {
     let posts = [];
     try {
         posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
@@ -38,7 +38,7 @@ app.get('/api/posts', (req, res) => {
 });
 
 // POST 게시글
-app.post('/api/posts', (req, res) => {
+app.post('/posts', (req, res) => {
     const { text, board } = req.body;
     let posts = [];
     try {
@@ -75,7 +75,7 @@ function adminOnly(req, res, next) {
 }
 
 // DELETE 게시글 (관리자)
-app.delete('/api/posts/:id', adminOnly, (req, res) => {
+app.delete('/posts/:id', adminOnly, (req, res) => {
     const postId = req.params.id;
     let posts = [];
     try {
