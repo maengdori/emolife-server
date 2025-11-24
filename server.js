@@ -8,21 +8,24 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS 설정: GitHub Pages 허용
+// CORS 설정
 app.use(cors({
     origin: 'https://maengdori.github.io',
     credentials: true
 }));
 
+// 세션
 app.use(session({
     secret: "emolife_secret",
     resave: false,
     saveUninitialized: true
 }));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-// GET 게시글 (board 필터링)
+// ------------------------
+// 게시글 API
+// ------------------------
 app.get('/posts', (req, res) => {
     let posts = [];
     try {
@@ -32,12 +35,13 @@ app.get('/posts', (req, res) => {
     }
 
     const board = req.query.board;
-    if (board) posts = posts.filter(p => p.board === board);
+    if (board) {
+        posts = posts.filter(p => p.board === board);
+    }
 
     res.json(posts);
 });
 
-// POST 게시글
 app.post('/posts', (req, res) => {
     const { text, board } = req.body;
     let posts = [];
@@ -50,14 +54,16 @@ app.post('/posts', (req, res) => {
     const newPost = {
         id: Date.now().toString(),
         text,
-        board: board || 'default'
+        board
     };
     posts.push(newPost);
     fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
     res.json({ success: true, post: newPost });
 });
 
-// 관리자 로그인
+// ------------------------
+// 관리자 기능
+// ------------------------
 app.post('/admin/login', (req, res) => {
     const { password } = req.body;
     if (password === process.env.ADMIN_PASSWORD) {
@@ -68,13 +74,11 @@ app.post('/admin/login', (req, res) => {
     }
 });
 
-// 관리자 권한 체크
 function adminOnly(req, res, next) {
     if (req.session.isAdmin) next();
     else res.status(403).json({ message: '관리자 권한 없음' });
 }
 
-// DELETE 게시글 (관리자)
 app.delete('/posts/:id', adminOnly, (req, res) => {
     const postId = req.params.id;
     let posts = [];
@@ -83,11 +87,15 @@ app.delete('/posts/:id', adminOnly, (req, res) => {
     } catch (err) {
         posts = [];
     }
+
     posts = posts.filter(p => p.id !== postId);
     fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
     res.json({ success: true });
 });
 
+// ------------------------
+// 서버 시작
+// ------------------------
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
