@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
 </head>
 <body>
 <h2>관리자 대시보드</h2>
@@ -10,14 +10,11 @@
 
 <script>
 async function loadPosts() {
-    const res = await fetch('https://[Railway서버주소]/posts', {
-        credentials: 'include'
-    });
+    const res = await fetch('https://[Railway서버주소]/posts', { credentials: 'include' });
     const posts = await res.json();
     let html = "";
     posts.forEach(p => {
-        html += `
-        <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+        html += `<div style="border:1px solid #ccc; margin:10px; padding:10px;">
             <p><b>ID:</b> ${p.id}</p>
             <p>${p.text}</p>
             <button onclick="deletePost('${p.id}')">삭제</button>
@@ -32,10 +29,7 @@ async function deletePost(id) {
         credentials: 'include'
     });
     const data = await res.json();
-    if (data.success) {
-        alert("삭제 완료");
-        loadPosts();
-    }
+    if (data.success) loadPosts();
 }
 
 loadPosts();
