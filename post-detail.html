@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emolife - 글 상세</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <h1 class="logo">Emolife</h1>
+  </div>
+  <div class="header-right">
+    <a class="btn link" id="backToBoard" href="board.html">목록으로</a>
+  </div>
+</header>
+
+<main class="main post-container">
+  <article id="postContent" class="post-content"></article>
+
+  <div class="post-actions">
+    <button id="likeBtn" class="btn like-btn">👍 0</button>
+  </div>
+
+  <div id="comments" class="comments"></div>
+
+  <!-- Desktop comment form -->
+  <form id="commentForm" class="comment-form">
+    <input type="text" id="commentInput" placeholder="댓글 작성" class="comment-input">
+    <button type="submit" class="comment-submit btn primary">댓글 달기</button>
+  </form>
+
+  <!-- Mobile fixed comment bar (visible via CSS @media) -->
+  <div class="comment-fixed" id="commentFixedBar" style="display:none;">
+    <input type="text" id="commentInputFixed" placeholder="댓글 작성" class="comment-input">
+    <button id="commentSubmitFixed" class="btn primary">댓글</button>
+  </div>
+</main>
+
+<script src="./post-detail.js"></script>
+</body>
+</html>

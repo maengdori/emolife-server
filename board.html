@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emolife - 채널별 게시글</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <h1 class="logo">Emolife</h1>
+    <div id="channelName" class="channel-name"></div>
+  </div>
+  <div class="header-right">
+    <button id="writeBtn" class="btn primary">글 작성</button>
+  </div>
+</header>
+
+<nav class="board-nav">
+  <button class="board-btn" data-board="career">진로 고민</button>
+  <button class="board-btn" data-board="love">연애 고민</button>
+  <button class="board-btn" data-board="friendship">관계 고민</button>
+  <button class="board-btn" data-board="etc">기타 고민</button>
+</nav>
+
+<main class="main">
+  <div id="feed" class="feed"></div>
+</main>
+
+<script src="./board.js"></script>
+</body>
+</html>

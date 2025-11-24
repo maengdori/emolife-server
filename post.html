@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emolife - 글 작성</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <h1 class="logo">Emolife</h1>
+  </div>
+  <div class="header-right">
+    <a class="btn link" href="board.html">목록으로</a>
+  </div>
+</header>
+
+<main class="main">
+  <section class="write-box">
+    <div class="field">
+      <label for="boardSelect">채널 선택:</label>
+      <select id="boardSelect">
+        <option value="career">진로 고민</option>
+        <option value="love">연애 고민</option>
+        <option value="friendship">우정 고민</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <textarea id="postInput" placeholder="글 내용을 입력하세요"></textarea>
+    </div>
+
+    <div class="row">
+      <label class="inline"><input type="checkbox" id="anonymous"> 익명</label>
+      <input type="text" id="tags" placeholder="태그 입력 (콤마 구분)" class="tags-input">
+    </div>
+
+    <div class="actions">
+      <button id="submitPost" class="btn primary">게시</button>
+      <button id="cancelPost" class="btn danger">취소</button>
+    </div>
+  </section>
+</main>
+
+<script src="./write.js"></script>
+</body>
+</html>
