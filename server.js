@@ -26,24 +26,27 @@ const PORT = process.env.PORT || 3000;
 
 // 게시글 API
 app.get('/posts', (req, res) => {
+    const board = req.query.board;
     let posts = [];
     try {
         posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
-    } catch (err) {
-        posts = [];
+    } catch { posts = []; }
+
+    if (board) {
+        posts = posts.filter(p => p.board === board);
     }
+
     res.json(posts);
 });
 
 app.post('/posts', (req, res) => {
-    const { text } = req.body;
+    const { text, board } = req.body;
     let posts = [];
     try {
         posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
-    } catch (err) {
-        posts = [];
-    }
-    const newPost = { id: Date.now().toString(), text };
+    } catch { posts = []; }
+
+    const newPost = { id: Date.now().toString(), text, board: board || 'default' };
     posts.push(newPost);
     fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
     res.json({ success: true, post: newPost });
@@ -72,15 +75,12 @@ app.delete('/posts/:id', adminOnly, (req, res) => {
     let posts = [];
     try {
         posts = JSON.parse(fs.readFileSync('posts.json', 'utf8'));
-    } catch (err) {
-        posts = [];
-    }
+    } catch { posts = []; }
+
     posts = posts.filter(p => p.id !== postId);
     fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
     res.json({ success: true });
 });
 
 // 서버 시작
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
