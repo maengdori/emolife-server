@@ -18,7 +18,7 @@ const board = urlParams.get('board') || 'default';
 // 게시글 불러오기
 async function loadPosts() {
     try {
-        const res = await fetch(`${SERVER_URL}/api/posts?board=${board}`, { credentials: 'include' });
+        const res = await fetch(`${SERVER_URL}/posts?board=${board}`, { credentials: 'include' });
         if (!res.ok) throw new Error('게시물을 불러오지 못했습니다.');
         const posts = await res.json();
 
