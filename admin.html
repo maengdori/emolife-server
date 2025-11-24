@@ -23,11 +23,8 @@ async function login() {
             body: JSON.stringify({ password: pw })
         });
         const data = await res.json();
-        if (data.success) {
-            location.href = 'admin-dashboard.html';
-        } else {
-            alert('비밀번호가 틀렸습니다');
-        }
+        if (data.success) location.href = 'admin-dashboard.html';
+        else alert('비밀번호가 틀렸습니다');
     } catch (err) {
         alert('로그인 실패: ' + err.message);
     }
