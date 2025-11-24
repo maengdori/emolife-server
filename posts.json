@@ -1,0 +1,5 @@
+[
+  {"id":"1","text":"테스트 게시글 1","board":"career"},
+  {"id":"2","text":"테스트 게시글 2","board":"love"},
+  {"id":"3","text":"테스트 게시글 3","board":"friendship"}
+]
