@@ -11,17 +11,26 @@
 <button onclick="login()">로그인</button>
 
 <script>
+const SERVER_URL = 'https://emolife-server-production.up.railway.app';
+
 async function login() {
     const pw = document.getElementById('pw').value;
-    const res = await fetch('https://emolife-server-production.up.railway.app/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ password: pw })
-    });
-    const data = await res.json();
-    if (data.success) location.href = 'admin-dashboard.html';
-    else alert('비밀번호가 틀렸습니다');
+    try {
+        const res = await fetch(`${SERVER_URL}/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ password: pw })
+        });
+        const data = await res.json();
+        if (data.success) {
+            location.href = 'admin-dashboard.html';
+        } else {
+            alert('비밀번호가 틀렸습니다');
+        }
+    } catch (err) {
+        alert('로그인 실패: ' + err.message);
+    }
 }
 </script>
 </body>
