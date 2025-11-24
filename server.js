@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const fs = require('fs');
 const session = require('express-session');
@@ -9,9 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS 설정
+// CORS 설정 (GitHub Pages 허용)
 app.use(cors({
-    origin: 'https://maengdori.github.io', // GitHub Pages 주소
+    origin: 'https://maengdori.github.io',
     credentials: true
 }));
 
@@ -50,7 +49,7 @@ app.post('/posts', (req, res) => {
     res.json({ success: true, post: newPost });
 });
 
-// 관리자 기능
+// 관리자 로그인
 app.post('/admin/login', (req, res) => {
     const { password } = req.body;
     if (password === process.env.ADMIN_PASSWORD) {
@@ -61,11 +60,13 @@ app.post('/admin/login', (req, res) => {
     }
 });
 
+// 관리자 인증 미들웨어
 function adminOnly(req, res, next) {
     if (req.session.isAdmin) next();
     else res.status(403).json({ message: '관리자 권한 없음' });
 }
 
+// 게시글 삭제
 app.delete('/posts/:id', adminOnly, (req, res) => {
     const postId = req.params.id;
     let posts = [];
