@@ -3,7 +3,7 @@ const feed = document.getElementById('feed');
 const channelName = document.getElementById('channelName');
 const boardButtons = document.querySelectorAll('.board-btn');
 
-let currentBoard = 'career'; // 기본 게시판
+let currentBoard = 'career';
 
 // 게시물 불러오기
 async function loadPosts(board) {
@@ -21,6 +21,7 @@ async function loadPosts(board) {
     posts.forEach(p => {
       html += `<div class="post">
                  <p>${p.text}</p>
+                 <button onclick="deletePost('${p.id}')">삭제</button>
                </div>`;
     });
     feed.innerHTML = html;
@@ -38,7 +39,6 @@ boardButtons.forEach(btn => {
   });
 });
 
-// board 코드 -> 화면 표시 이름
 function getBoardName(board) {
   switch(board) {
     case 'career': return '진로 고민';
@@ -46,6 +46,20 @@ function getBoardName(board) {
     case 'friendship': return '관계 고민';
     case 'etc': return '기타 고민';
     default: return '게시판';
+  }
+}
+
+// 게시글 삭제
+async function deletePost(id) {
+  try {
+    const res = await fetch(`${SERVER_URL}/posts/${id}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+    if (!res.ok) throw new Error('삭제 실패');
+    loadPosts(currentBoard);
+  } catch (err) {
+    alert(err.message);
   }
 }
 
