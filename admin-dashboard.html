@@ -9,6 +9,7 @@
 
 <h3>새 게시글 작성</h3>
 <textarea id="newPostText" placeholder="게시글 내용을 입력"></textarea>
+<input id="boardName" placeholder="게시판명 (optional)">
 <button onclick="addPost()">게시</button>
 
 <div id="posts"></div>
@@ -18,14 +19,17 @@ const SERVER_URL = 'https://emolife-server-production.up.railway.app';
 
 // 게시글 불러오기
 async function loadPosts() {
+    const board = document.getElementById('boardName')?.value || '';
     try {
-        const res = await fetch(`${SERVER_URL}/posts`, { credentials: 'include' });
+        const url = board ? `${SERVER_URL}/posts?board=${board}` : `${SERVER_URL}/posts`;
+        const res = await fetch(url, { credentials: 'include' });
         if (!res.ok) throw new Error('게시물을 불러오지 못했습니다');
         const posts = await res.json();
+
         let html = "";
         posts.forEach(p => {
             html += `<div style="border:1px solid #ccc; margin:10px; padding:10px;">
-                <p><b>ID:</b> ${p.id}</p>
+                <p><b>ID:</b> ${p.id} | <b>Board:</b> ${p.board}</p>
                 <p>${p.text}</p>
                 <button onclick="deletePost('${p.id}')">삭제</button>
             </div>`;
@@ -39,13 +43,15 @@ async function loadPosts() {
 // 게시글 추가
 async function addPost() {
     const text = document.getElementById('newPostText').value;
+    const board = document.getElementById('boardName').value || 'default';
     if (!text) return alert('내용을 입력하세요');
+
     try {
         const res = await fetch(`${SERVER_URL}/posts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ text })
+            body: JSON.stringify({ text, board })
         });
         if (!res.ok) throw new Error('게시글 추가 실패');
         document.getElementById('newPostText').value = '';
@@ -74,4 +80,3 @@ loadPosts();
 </script>
 </body>
 </html>
-
