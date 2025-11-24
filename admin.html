@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Login</title>
+<meta charset="UTF-8">
+<title>Admin Login</title>
 </head>
 <body>
 <h2>관리자 로그인</h2>
@@ -16,16 +16,14 @@ async function login() {
     const res = await fetch('https://[Railway서버주소]/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // 세션 유지
+        credentials: 'include',
         body: JSON.stringify({ password: pw })
     });
     const data = await res.json();
-    if (data.success) {
-        location.href = 'admin-dashboard.html';
-    } else {
-        alert('비밀번호가 틀렸습니다');
-    }
+    if (data.success) location.href = 'admin-dashboard.html';
+    else alert('비밀번호가 틀렸습니다');
 }
 </script>
 </body>
 </html>
+
