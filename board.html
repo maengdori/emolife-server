@@ -2,40 +2,32 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>게시판</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emolife - 채널별 게시글</title>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<h2>게시판</h2>
-<div id="posts"></div>
+<header class="header">
+  <div class="header-left">
+    <h1 class="logo">Emolife</h1>
+    <div id="channelName" class="channel-name"></div>
+  </div>
+  <div class="header-right">
+    <button id="writeBtn" class="btn primary">글 작성</button>
+  </div>
+</header>
 
-<script>
-const SERVER_URL = 'https://emolife-server-production.up.railway.app';
+<nav class="board-nav">
+  <button class="board-btn" data-board="career">진로 고민</button>
+  <button class="board-btn" data-board="love">연애 고민</button>
+  <button class="board-btn" data-board="friendship">관계 고민</button>
+  <button class="board-btn" data-board="etc">기타 고민</button>
+</nav>
 
-// URL 쿼리에서 board 추출
-const urlParams = new URLSearchParams(window.location.search);
-const board = urlParams.get('board') || 'default';
+<main class="main">
+  <div id="feed" class="feed"></div>
+</main>
 
-// 게시글 불러오기
-async function loadPosts() {
-    try {
-        const res = await fetch(`${SERVER_URL}/posts?board=${board}`, { credentials: 'include' });
-        if (!res.ok) throw new Error('게시물을 불러오지 못했습니다.');
-        const posts = await res.json();
-
-        let html = '';
-        posts.forEach(p => {
-            html += `<div style="border:1px solid #ccc; margin:10px; padding:10px;">
-                        <p><b>ID:</b> ${p.id}</p>
-                        <p>${p.text}</p>
-                     </div>`;
-        });
-        document.getElementById('posts').innerHTML = html;
-    } catch (err) {
-        document.getElementById('posts').innerHTML = `<p style="color:red;">${err.message}</p>`;
-    }
-}
-
-loadPosts();
-</script>
+<script src="./board.js"></script>
 </body>
 </html>
