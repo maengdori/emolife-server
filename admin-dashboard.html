@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>Admin Dashboard</title>
@@ -12,6 +12,7 @@
 <input id="boardName" placeholder="게시판명 (optional)">
 <button onclick="addPost()">게시</button>
 
+<h3>게시글 목록</h3>
 <div id="posts"></div>
 
 <script>
@@ -19,20 +20,20 @@ const SERVER_URL = 'https://emolife-server-production.up.railway.app';
 
 // 게시글 불러오기
 async function loadPosts() {
-    const board = document.getElementById('boardName')?.value || '';
+    const board = document.getElementById('boardName').value || '';
     try {
-        const url = board ? `${SERVER_URL}/posts?board=${board}` : `${SERVER_URL}/posts`;
+        const url = board ? `${SERVER_URL}/api/posts?board=${board}` : `${SERVER_URL}/api/posts`;
         const res = await fetch(url, { credentials: 'include' });
         if (!res.ok) throw new Error('게시물을 불러오지 못했습니다');
         const posts = await res.json();
 
-        let html = "";
+        let html = '';
         posts.forEach(p => {
             html += `<div style="border:1px solid #ccc; margin:10px; padding:10px;">
-                <p><b>ID:</b> ${p.id} | <b>Board:</b> ${p.board}</p>
-                <p>${p.text}</p>
-                <button onclick="deletePost('${p.id}')">삭제</button>
-            </div>`;
+                        <p><b>ID:</b> ${p.id} | <b>Board:</b> ${p.board || 'default'}</p>
+                        <p>${p.text}</p>
+                        <button onclick="deletePost('${p.id}')">삭제</button>
+                    </div>`;
         });
         document.getElementById('posts').innerHTML = html;
     } catch (err) {
@@ -47,7 +48,7 @@ async function addPost() {
     if (!text) return alert('내용을 입력하세요');
 
     try {
-        const res = await fetch(`${SERVER_URL}/posts`, {
+        const res = await fetch(`${SERVER_URL}/api/posts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -64,8 +65,8 @@ async function addPost() {
 // 게시글 삭제
 async function deletePost(id) {
     try {
-        const res = await fetch(`${SERVER_URL}/posts/${id}`, {
-            method: "DELETE",
+        const res = await fetch(`${SERVER_URL}/api/posts/${id}`, {
+            method: 'DELETE',
             credentials: 'include'
         });
         if (!res.ok) throw new Error('삭제 실패');
@@ -75,7 +76,7 @@ async function deletePost(id) {
     }
 }
 
-// 페이지 로드 시 게시글 표시
+// 초기 로드
 loadPosts();
 </script>
 </body>
