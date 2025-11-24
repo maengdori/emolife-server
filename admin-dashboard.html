@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h2>관리자 대시보드</h2>
+<div id="posts"></div>
+
+<script>
+function loadPosts() {
+    fetch('/posts')
+        .then(res => res.json())
+        .then(data => {
+            let html = "";
+            data.forEach(p => {
+                html += `
+                <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+                    <p><b>ID:</b> ${p.id}</p>
+                    <p>${p.text}</p>
+                    <button onclick="deletePost('${p.id}')">삭제</button>
+                </div>`;
+            });
+            document.getElementById('posts').innerHTML = html;
+        });
+}
+
+function deletePost(id) {
+    fetch(`/posts/${id}`, { method: "DELETE" })
+        .then(res => res.json())
+        .then(result => {
+            if (result.success) {
+                alert("삭제 완료");
+                loadPosts();
+            }
+        });
+}
+
+loadPosts();
+</script>
+
+</body>
+</html>
