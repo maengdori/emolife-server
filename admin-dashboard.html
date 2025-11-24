@@ -10,7 +10,7 @@
 
 <script>
 async function loadPosts() {
-    const res = await fetch('https://[Railway서버주소]/posts', { credentials: 'include' });
+    const res = await fetch('https://emolife-server-production.up.railway.app/posts', { credentials: 'include' });
     const posts = await res.json();
     let html = "";
     posts.forEach(p => {
@@ -24,7 +24,7 @@ async function loadPosts() {
 }
 
 async function deletePost(id) {
-    const res = await fetch(`https://[Railway서버주소]/posts/${id}`, {
+    const res = await fetch(`https://emolife-server-production.up.railway.app/posts/${id}`, {
         method: "DELETE",
         credentials: 'include'
     });
