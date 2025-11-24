@@ -13,7 +13,7 @@
 <script>
 async function login() {
     const pw = document.getElementById('pw').value;
-    const res = await fetch('https://[Railway서버주소]/admin/login', {
+    const res = await fetch('https://emolife-server-production.up.railway.app/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -26,4 +26,3 @@ async function login() {
 </script>
 </body>
 </html>
-
