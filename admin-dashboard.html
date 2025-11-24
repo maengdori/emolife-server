@@ -6,6 +6,11 @@
 </head>
 <body>
 <h2>관리자 대시보드</h2>
+
+<h3>새 게시글 작성</h3>
+<textarea id="newPostText" placeholder="게시글 내용을 입력"></textarea>
+<button onclick="addPost()">게시</button>
+
 <div id="posts"></div>
 
 <script>
@@ -28,6 +33,25 @@ async function loadPosts() {
         document.getElementById('posts').innerHTML = html;
     } catch (err) {
         document.getElementById('posts').innerHTML = `<p style="color:red;">${err.message}</p>`;
+    }
+}
+
+// 게시글 추가
+async function addPost() {
+    const text = document.getElementById('newPostText').value;
+    if (!text) return alert('내용을 입력하세요');
+    try {
+        const res = await fetch(`${SERVER_URL}/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ text })
+        });
+        if (!res.ok) throw new Error('게시글 추가 실패');
+        document.getElementById('newPostText').value = '';
+        loadPosts();
+    } catch (err) {
+        alert(err.message);
     }
 }
 
